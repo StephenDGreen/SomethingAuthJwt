@@ -1,0 +1,37 @@
+@page "/createdata"
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@using System.Text;
+@using System;
+
+<h1>Something Random</h1>
+
+<p>Generate random name data.</p>
+
+@if (somethings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var something in somethings)
+            {
+                <tr>
+                    <td>@something.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-primary" @onclick="AddSomething">
+        Add Something
+    </button>
+
+
+}
