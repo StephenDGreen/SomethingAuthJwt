@@ -23,6 +23,13 @@ namespace Something.API
                                       .AllowAnyMethod().AllowAnyHeader();
                                   });
             });
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+                    config.Cookie.Name = "Custom.Cookie";
+                    config.LoginPath = "/Home/Authenticate";
+                });
+            services.AddAuthorization();
             services.AddDbContext<AppDbContext>(
                 options => options.UseInMemoryDatabase(nameof(Something.API))
                 );
@@ -40,6 +47,10 @@ namespace Something.API
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             if (env.IsDevelopment())
             {

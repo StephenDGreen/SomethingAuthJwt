@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Something.Application;
 using Something.Persistence;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Something.API.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly AppDbContext ctx;
@@ -17,6 +22,14 @@ namespace Something.API.Controllers
             this.ctx = ctx;
         }
 
+        [AllowAnonymous]
+        public IActionResult Authenticate()
+        {
+            GetSignin(GetClaims());
+
+            return RedirectToAction("GetList");
+        }
+
         [HttpPost]
         [Route("api/things")]
         public ActionResult Create([FromForm] string name)
@@ -28,6 +41,8 @@ namespace Something.API.Controllers
             return GetAll();
         }
 
+        // for now, to test the UI, allow anonymous here, until the UI can handle the cookie
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/things")]
         public ActionResult GetList()
@@ -35,6 +50,24 @@ namespace Something.API.Controllers
             return GetAll();
         }
 
+        private static ClaimsPrincipal GetClaims()
+        {
+            var customClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, "Example"),
+                new Claim(ClaimTypes.Email, "example@mail.com"),
+                new Claim(ClaimTypes.Role, "Admin"),
+            };
+
+            var customIdentity = new ClaimsIdentity(customClaims, "Custom Identity");
+
+            var userPrincipal = new ClaimsPrincipal(new[] { customIdentity });
+            return userPrincipal;
+        }
+        private void GetSignin(ClaimsPrincipal userPrincipal)
+        {
+            HttpContext.SignInAsync(userPrincipal);
+        }
         private ActionResult GetAll()
         {
             var result = readInteractor.GetSomethingList();
