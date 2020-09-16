@@ -8,7 +8,7 @@
 
 <p>Generate random name data.</p>
 
-@if (somethings == null)
+@if (somethingsVM == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -21,7 +21,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var something in somethings)
+            @foreach (var something in somethingsVM)
             {
                 <tr>
                     <td>@something.Name</td>

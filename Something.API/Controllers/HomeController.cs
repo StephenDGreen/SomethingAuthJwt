@@ -41,8 +41,6 @@ namespace Something.API.Controllers
             return GetAll();
         }
 
-        // for now, to test the UI, allow anonymous here, until the UI can handle the cookie
-        [AllowAnonymous]
         [HttpGet]
         [Route("api/things")]
         public ActionResult GetList()

@@ -20,7 +20,7 @@ namespace Something.API
                                   builder =>
                                   {
                                       builder.WithOrigins("https://localhost:44380")
-                                      .AllowAnyMethod().AllowAnyHeader();
+                                      .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                                   });
             });
             services.AddAuthentication("CookieAuth")
