@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Something.Application", "So
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Something.API", "Something.API\Something.API.csproj", "{655B2C3B-B2F3-4497-8D86-A8A6F388CF04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Something.Security", "Something.Security\Something.Security.csproj", "{140A312B-6070-4301-B145-E36BBB463C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Something.Security", "Something.Security\Something.Security.csproj", "{140A312B-6070-4301-B145-E36BBB463C39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Something.UI", "Something.UI\Something.UI.csproj", "{2FC44F22-97C1-4D2C-BF6D-1B2836FD3DC7}"
 EndProject

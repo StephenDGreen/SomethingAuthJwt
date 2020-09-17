@@ -3,6 +3,7 @@ using Something.UI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,9 +37,12 @@ namespace Something.UI.Pages
         }
 
         private SomethingVM[] somethings;
+        private Token token;
 
         protected override async Task OnInitializedAsync()
         {
+            token = await Http.GetFromJsonAsync<Token>(@"https://localhost:44310/home/authenticate");
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.access_token);
             somethings = await Http.GetFromJsonAsync<SomethingVM[]>("https://localhost:44310/api/things");
         }
 
