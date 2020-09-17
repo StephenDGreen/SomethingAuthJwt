@@ -1,4 +1,4 @@
-﻿namespace Something.UI.Secure.ViewModel
+﻿namespace Something.UI.ViewModel
 {
     public class SomethingVM
     {

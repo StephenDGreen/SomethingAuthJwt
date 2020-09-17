@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Something.UI.Secure.ViewModel;
+using Something.UI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Something.UI.Secure.Pages
+namespace Something.UI.Pages
 {
     public partial class CreateData : ComponentBase
     {
@@ -35,11 +35,11 @@ namespace Something.UI.Secure.Pages
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
 
-        private SomethingVM[] somethingsVM;
+        private SomethingVM[] somethings;
 
         protected override async Task OnInitializedAsync()
         {
-            somethingsVM = await Http.GetFromJsonAsync<SomethingVM[]>("https://localhost:44310/api/things");
+            somethings = await Http.GetFromJsonAsync<SomethingVM[]>("https://localhost:44310/api/things");
         }
 
         protected async Task AddSomething()
@@ -51,7 +51,7 @@ namespace Something.UI.Secure.Pages
 
             var content = new FormUrlEncodedContent(value);
             var response = await Http.PostAsync(@"https://localhost:44310/api/things", content);
-            somethingsVM = response.Content.ReadFromJsonAsync<SomethingVM[]>().Result;
+            somethings = response.Content.ReadFromJsonAsync<SomethingVM[]>().Result;
         }
     }
 }

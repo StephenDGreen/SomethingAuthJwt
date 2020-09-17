@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Something.Application;
 using Something.Persistence;
+using Something.Security;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -12,22 +13,23 @@ namespace Something.API.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext ctx;
+        private readonly ISomethingUserManager userManager;
         private readonly ISomethingCreateInteractor createInteractor;
         private readonly ISomethingReadInteractor readInteractor;
 
-        public HomeController(ISomethingCreateInteractor createInteractor, ISomethingReadInteractor readInteractor, AppDbContext ctx)
+        public HomeController(ISomethingCreateInteractor createInteractor, ISomethingReadInteractor readInteractor, AppDbContext ctx, ISomethingUserManager userManager)
         {
             this.createInteractor = createInteractor;
             this.readInteractor = readInteractor;
             this.ctx = ctx;
+            this.userManager = userManager;
         }
 
         [AllowAnonymous]
-        public IActionResult Authenticate()
+        public ActionResult Authenticate()
         {
-            GetSignin(GetClaims());
-
-            return RedirectToAction("GetList");
+            var token = userManager.GetUserToken();
+            return Ok(new { access_token = token});
         }
 
         [HttpPost]
@@ -46,25 +48,6 @@ namespace Something.API.Controllers
         public ActionResult GetList()
         {
             return GetAll();
-        }
-
-        private static ClaimsPrincipal GetClaims()
-        {
-            var customClaims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Name, "Example"),
-                new Claim(ClaimTypes.Email, "example@mail.com"),
-                new Claim(ClaimTypes.Role, "Admin"),
-            };
-
-            var customIdentity = new ClaimsIdentity(customClaims, "Custom Identity");
-
-            var userPrincipal = new ClaimsPrincipal(new[] { customIdentity });
-            return userPrincipal;
-        }
-        private void GetSignin(ClaimsPrincipal userPrincipal)
-        {
-            HttpContext.SignInAsync(userPrincipal);
         }
         private ActionResult GetAll()
         {

@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Something.Application;
 using Something.Domain;
 using Something.Persistence;
+using Something.Security;
+using System.Text;
 
 namespace Something.API
 {
@@ -23,11 +26,17 @@ namespace Something.API
                                       .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                                   });
             });
-            services.AddAuthentication("CookieAuth")
-                .AddCookie("CookieAuth", config =>
+            services.AddAuthentication("OAuth")
+                .AddJwtBearer("OAuth", config =>
                 {
-                    config.Cookie.Name = "Custom.Cookie";
-                    config.LoginPath = "/Home/Authenticate";
+                    var secretBytes = Encoding.UTF8.GetBytes(JwtConstants.Secret);
+                    var key = new SymmetricSecurityKey(secretBytes);
+                    config.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = JwtConstants.Issuer,
+                        ValidAudience = JwtConstants.Audience,
+                        IssuerSigningKey = key
+                    };
                 });
             services.AddAuthorization();
             services.AddDbContext<AppDbContext>(
@@ -37,6 +46,7 @@ namespace Something.API
             services.AddScoped<ISomethingCreateInteractor, SomethingCreateInteractor>();
             services.AddScoped<ISomethingReadInteractor, SomethingReadInteractor>();
             services.AddScoped<ISomethingPersistence, SomethingPersistence>();
+            services.AddSingleton<ISomethingUserManager, SomethingUserManager>();
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
