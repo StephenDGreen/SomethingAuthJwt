@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Something.Application;
 using Something.Persistence;
 using Something.Security;
-using System.Collections.Generic;
-using System.Security.Claims;
 
 namespace Something.API.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    [ApiController]
+    public class HomeController : ControllerBase
     {
         private readonly AppDbContext ctx;
         private readonly ISomethingUserManager userManager;
@@ -26,6 +24,7 @@ namespace Something.API.Controllers
         }
 
         [AllowAnonymous]
+        [Route("home/authenticate")]
         public ActionResult Authenticate()
         {
             var token = userManager.GetUserToken();

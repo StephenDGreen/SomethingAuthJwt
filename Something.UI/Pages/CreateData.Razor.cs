@@ -49,13 +49,13 @@ namespace Something.UI.Pages
         protected async Task AddSomething()
         {
             var value = new Dictionary<string, string>
-        {
-        { "Name", RandomString(RandomNumber(10,20),true) }
-        };
+            {
+                { "Name", RandomString(RandomNumber(10,20),true) }
+            };
 
             var content = new FormUrlEncodedContent(value);
             var response = await Http.PostAsync(@"https://localhost:44310/api/things", content);
-            somethings = response.Content.ReadFromJsonAsync<SomethingVM[]>().Result;
+            somethings = await response.Content.ReadFromJsonAsync<SomethingVM[]>();
         }
     }
 }
